@@ -107,6 +107,91 @@ bool login()
     Sleep(2000);
     return false;
  }
+class Employee {
+private:
+    int id;
+    string name;
+    double hourlyRate;
+    double hoursWorked;
+
+public:
+    Employee(int empId,string empName,double rate,double hours)
+    {
+        id=empId;
+        name=empName;
+        hourlyRate=rate;
+        hoursWorked=hours;
+    }
+
+    Employee(){
+      id=0;
+      name="";
+      hourlyRate=0.0;
+      hoursWorked=0.0;
+    }
+
+    int getId() const {
+         return id;
+    }
+    string getName() const {
+        return name;
+    }
+    double getHourlyRate() const {
+         return hourlyRate;
+    }
+    double getHoursWorked() const {
+         return hoursWorked;
+    }
+
+    void setId(int newId)
+     {
+         id = newId;
+     }
+    void setName(const string &newName)
+     {
+         name = newName;
+     }
+    void setHourlyRate(double newRate)
+     {
+         hourlyRate = newRate;
+     }
+    void setHoursWorked(double newHours)
+     {
+         hoursWorked = newHours;
+     }
+
+    double calculateSalary() const {
+        return hourlyRate * hoursWorked;
+    }
+
+    void displayDetails() const {
+        cout << left << setw(10) << id << setw(20) << name
+             << setw(15) << hourlyRate << setw(15) << hoursWorked
+             << setw(15) << calculateSalary() << endl;
+    }
+
+    string toFileString() const {
+        stringstream ss;
+        ss << id << "," << name << "," << hourlyRate << "," << hoursWorked;
+        return ss.str();
+    }
+
+    static Employee fromFileString(const string &line) {
+        Employee emp;
+        stringstream ss(line);
+        string token;
+
+        getline(ss, token, ',');
+        emp.id = stoi(token);
+        getline(ss, emp.name, ',');
+        getline(ss, token, ',');
+        emp.hourlyRate = stod(token);
+        getline(ss, token, ',');
+        emp.hoursWorked = stod(token);
+
+        return emp;
+    }
+};
 
 int main(){
 
