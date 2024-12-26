@@ -194,6 +194,39 @@ public:
 };
 
 int main(){
+    Login log;
+    bool loggedIn=false;
+
+    while (!loggedIn)
+    {
+        system("cls");
+        int choice;
+        cout<<"Welcome to the System\n";
+        cout<<"1. Register\n";
+        cout<<"2. Login\n";
+        cout<<"3. Exit\n";
+        cout<<"Enter choice: ";
+        cin>> choice;
+
+        if (choice==1)
+        {
+            registration(log);
+        }
+        else if (choice == 2)
+        {
+            loggedIn = login();
+        }
+        else if (choice == 3)
+        {
+            cout << "Exiting...\n";
+            return 0;
+        }
+        else
+        {
+            cout << "Invalid choice! Try again.\n";
+        }
+    }
+
 
 
 }
