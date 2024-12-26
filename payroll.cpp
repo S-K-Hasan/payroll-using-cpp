@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <windows.h>
 using namespace std;
+
+
 class Login {
 private:
     string LoginID,Password;
@@ -34,6 +36,7 @@ public:
         return Password;
     }
 };
+
 void registration(Login &log)
  {
     system("cls");
@@ -107,6 +110,7 @@ bool login()
     Sleep(2000);
     return false;
  }
+
 class Employee {
 private:
     int id;
@@ -192,6 +196,7 @@ public:
         return emp;
     }
 };
+
 class PayrollSystem {
 private:
     vector<Employee> employees;
@@ -237,10 +242,72 @@ private:
             }
         }
         return -1;
-    } 
+    }
+
+public:
+    PayrollSystem() {
+        loadFromFile();
+    }
+
+    void addEmployee(int id, string name, double hourlyRate, double hoursWorked)
+    {
+        if (findEmployeeIndex(id)!=-1) {
+            cout <<"Employee with ID "<<id<<" already exists.\n";
+            return;
+        }
+        employees.emplace_back(id,name,hourlyRate,hoursWorked);
+        saveToFile();
+        cout <<"Employee added successfully!\n";
+    }
+
+    void displayPayroll()
+    {
+        if (employees.empty())
+        {
+            cout<<"No employees found.\n";
+            return;
+        }
+        cout <<left<<setw(10)<<"ID"<<setw(20)<<"Name"
+             <<setw(15)<<"Hourly Rate"<<setw(15)<<"Hours Worked"
+             <<setw(15)<<"Salary"<<endl;
+        cout<<string(75,'-')<<endl;
+
+        for (const auto &emp:employees)
+        {
+            emp.displayDetails();
+        }
+    }
+
+    void updateEmployee(int id, string newName, double newRate, double newHours)
+    {
+        int index = findEmployeeIndex(id);
+        if (index == -1)
+        {
+            cout << "Employee with ID " << id << " not found.\n";
+            return;
+        }
+        employees[index].setName(newName);
+        employees[index].setHourlyRate(newRate);
+        employees[index].setHoursWorked(newHours);
+        saveToFile();
+        cout<<"Employee updated successfully!\n";
+    }
+
+    void deleteEmployee(int id)
+    {
+        int index = findEmployeeIndex(id);
+        if (index==-1) {
+            cout<<"Employee with ID "<<id<< " not found.\n";
+            return;
+        }
+        employees.erase(employees.begin()+index);
+        saveToFile();
+        cout<<"Employee deleted successfully!\n";
+    }
 };
 
-int main(){
+
+int main() {
     Login log;
     PayrollSystem payroll;
     bool loggedIn=false;
@@ -276,6 +343,71 @@ int main(){
     }
 
 
+    int option;
+    do {
+        system("cls");
+        cout<<"\nPayroll System Menu:\n";
+        cout<<"1. Add Employee\n";
+        cout<<"2. Display All Employees\n";
+        cout<<"3. Update Employee\n";
+        cout<<"4. Delete Employee\n";
+        cout<<"5. Logout\n";
+        cout<<"Enter your choice: ";
+        cin>> option;
+
+        switch (option)
+        {
+            case 1: {
+                int id;
+                string name;
+                double hourlyRate,hoursWorked;
+                cout<<"Enter ID: ";
+                cin>>id;
+                cin.ignore();
+                cout<<"Enter Name: ";
+                getline(cin, name);
+                cout<<"Enter Hourly Rate: ";
+                cin>>hourlyRate;
+                cout<<"Enter Hours Worked: ";
+                cin>>hoursWorked;
+                payroll.addEmployee(id,name,hourlyRate,hoursWorked);
+                break;
+            }
+            case 2:
+                payroll.displayPayroll();
+                break;
+            case 3: {
+                int id;
+                string newName;
+                double newRate,newHours;
+                cout<<"Enter Employee ID to Update: ";
+                cin>>id;
+                cin.ignore();
+                cout<<"Enter New Name: ";
+                getline(cin,newName);
+                cout<<"Enter New Hourly Rate: ";
+                cin>>newRate;
+                cout<<"Enter New Hours Worked: ";
+                cin>>newHours;
+                payroll.updateEmployee(id, newName, newRate, newHours);
+                break;
+            }
+            case 4: {
+                int id;
+                cout<<"Enter Employee ID to Delete: ";
+                cin>>id;
+                payroll.deleteEmployee(id);
+                break;
+            }
+            case 5:
+                loggedIn=false;
+                break;
+            default:
+                cout<<"Invalid choice! Try again.\n";
+        }
+        system("pause");
+    }
+    while (option != 5);
 
 }
 
