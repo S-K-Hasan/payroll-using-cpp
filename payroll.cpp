@@ -346,11 +346,33 @@ public:
         }
         else if (type=="part-time")
         {
-            newEmployee=new FullTimeEmployee(id, name, hourlyRate, hoursWorked,"Part-Time");
+           if (level=="entry")
+            {
+                newEmployee = new PartTimeEmployee(id,name,hourlyRate,hoursWorked,"Entry-Level");
+            }
+            else if (level=="senior")
+            {
+                newEmployee=new PartTimeEmployee(id,name,hourlyRate,hoursWorked,"Senior-Level");
+            }
+            else
+            {
+                newEmployee=new PartTimeEmployee(id,name,hourlyRate,hoursWorked,level);
+            }
         }
         else if (type=="intern")
         {
-            newEmployee=new FullTimeEmployee(id, name, hourlyRate, hoursWorked,"Intern");
+            if (level=="entry")
+            {
+                newEmployee = new InternEmployee(id,name,hourlyRate,hoursWorked,"Entry-Level");
+            }
+            else if (level=="senior")
+            {
+                newEmployee=new InternEmployee(id,name,hourlyRate,hoursWorked,"Senior-Level");
+            }
+            else
+            {
+                newEmployee=new InternEmployee(id,name,hourlyRate,hoursWorked,level);
+            }
         }
 
         if (newEmployee)
@@ -415,11 +437,27 @@ public:
             }
             else if(type=="part-time")
             {
-                *emp =PartTimeEmployee(id,emp->getName(),rate,hours,"Part-Time");
+               if (level=="entry") {
+                    *emp=PartTimeEmployee(id, emp->getName(),rate,hours,"Entry-Level");
+                }
+                else if (level=="senior") {
+                    *emp=PartTimeEmployee(id, emp->getName(),rate,hours,"Senior-Level");
+                }
+                else {
+                    *emp=PartTimeEmployee(id,emp->getName(),rate,hours,level);
+                }
             }
             else if(type=="intern")
             {
-                *emp =InternEmployee(id,emp->getName(),rate,hours,"Intern");
+                if (level=="entry") {
+                    *emp=InternEmployee(id, emp->getName(),rate,hours,"Entry-Level");
+                }
+                else if (level=="senior") {
+                    *emp=InternEmployee(id, emp->getName(),rate,hours,"Senior-Level");
+                }
+                else {
+                    *emp=InternEmployee(id,emp->getName(),rate,hours,level);
+                }
             }
 
             saveToFile();
@@ -448,7 +486,7 @@ int main() {
     Login log;
     PayrollSystem payroll;
     bool loggedIn = false;
-    
+
     while (!loggedIn) {
         system("cls");
         int choice;
