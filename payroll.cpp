@@ -285,49 +285,28 @@ public:
 
 class PayrollSystem {
 private:
-    vector<Employee> employees;
-    const string employeeFile = "Employees.txt";
+    vector<Employee*> employees;
 
     void saveToFile() {
-        ofstream outfile(employeeFile, ios::trunc);
-        if (!outfile)
-        {
-            cout <<"Error: Unable to open file for saving employee data!"<<endl;
-            return;
+        ofstream outFile("employees.txt");
+        for (const auto& emp : employees) {
+            outFile << emp->toFileString() << endl;
         }
-        for (const auto &emp:employees)
-        {
-            outfile<<emp.toFileString()<<endl;
-        }
-        outfile.close();
+        outFile.close();
     }
 
-    void loadFromFile()
-    {
-        ifstream infile(employeeFile);
-        if (!infile)
-        {
-            cout<<"No employee data found. Starting fresh!"<<endl;
-            return;
-        }
-        string line;
-        while (getline(infile, line))
-        {
-            employees.push_back(Employee::fromFileString(line));
-        }
-        infile.close();
-    }
-
-    int findEmployeeIndex(int id)
-     {
-        for (size_t i=0;i<employees.size();i++)
-        {
-            if (employees[i].getId()==id)
-            {
-                return i;
+    void loadFromFile() {
+        ifstream inFile("employees.txt");
+        if (inFile.is_open()) {
+            string line;
+            while (getline(inFile, line)) {
+                Employee* emp = Employee::fromFileString(line);
+                if (emp) {
+                    employees.push_back(emp);
+                }
             }
+            inFile.close();
         }
-        return -1;
     }
 
 public:
