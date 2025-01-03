@@ -6,7 +6,6 @@
 #include <windows.h>
 using namespace std;
 
-
 class Login {
 private:
     string LoginID,Password;
@@ -54,7 +53,7 @@ start:
     }
     else
     {
-        cout<<"\tEnter Minimum 8 Characters!" <<endl;
+        cout<<"\tEnter Minimum 8 Characters!"<<endl;
         goto start;
     }
     ofstream outfile("Login.txt", ios::app);
@@ -89,7 +88,7 @@ bool login()
     }
 
     string line;
-    while (getline(infile, line))
+    while (getline(infile,line))
     {
         stringstream ss(line);
         string userID,userPW;
@@ -445,109 +444,82 @@ public:
     }
 };
 
-
 int main() {
     Login log;
     PayrollSystem payroll;
-    bool loggedIn=false;
-
-    while (!loggedIn)
-    {
+    bool loggedIn = false;
+    
+    while (!loggedIn) {
         system("cls");
         int choice;
-        cout<<"Welcome to the System\n";
-        cout<<"1. Register\n";
-        cout<<"2. Login\n";
-        cout<<"3. Exit\n";
-        cout<<"Enter choice: ";
-        cin>> choice;
+        cout << "Welcome to the System\n";
+        cout << "1. Register\n";
+        cout << "2. Login\n";
+        cout << "3. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
 
-        if (choice==1)
-        {
-            registration(log);
-        }
-        else if (choice == 2)
-        {
+        if (choice == 1) {
+             registration(log);
+        } else if (choice == 2) {
             loggedIn = login();
-        }
-        else if (choice == 3)
-        {
+        } else if (choice == 3) {
             cout << "Exiting...\n";
             return 0;
-        }
-        else
-        {
+        } else {
             cout << "Invalid choice! Try again.\n";
         }
     }
-
-
     int option;
     do {
         system("cls");
-        cout<<"\nPayroll System Menu:\n";
-        cout<<"1. Add Employee\n";
-        cout<<"2. Display All Employees\n";
-        cout<<"3. Update Employee\n";
-        cout<<"4. Delete Employee\n";
-        cout<<"5. Logout\n";
-        cout<<"Enter your choice: ";
-        cin>> option;
+        cout << "\nPayroll System Menu:\n";
+        cout << "1. Add Employee\n";
+        cout << "2. Display All Employees\n";
+        cout << "3. Update Employee\n";
+        cout << "4. Delete Employee\n";
+        cout << "5. Logout\n";
+        cout << "Enter your choice: ";
+        cin >> option;
 
-        switch (option)
-        {
-            case 1: {
-                int id;
-                string name;
-                double hourlyRate,hoursWorked;
-                cout<<"Enter ID: ";
-                cin>>id;
-                cin.ignore();
-                cout<<"Enter Name: ";
-                getline(cin, name);
-                cout<<"Enter Hourly Rate: ";
-                cin>>hourlyRate;
-                cout<<"Enter Hours Worked: ";
-                cin>>hoursWorked;
-                payroll.addEmployee(id,name,hourlyRate,hoursWorked);
-                break;
-            }
-            case 2:
-                payroll.displayPayroll();
-                break;
-            case 3: {
-                int id;
-                string newName;
-                double newRate,newHours;
-                cout<<"Enter Employee ID to Update: ";
-                cin>>id;
-                cin.ignore();
-                cout<<"Enter New Name: ";
-                getline(cin,newName);
-                cout<<"Enter New Hourly Rate: ";
-                cin>>newRate;
-                cout<<"Enter New Hours Worked: ";
-                cin>>newHours;
-                payroll.updateEmployee(id, newName, newRate, newHours);
-                break;
-            }
-            case 4: {
-                int id;
-                cout<<"Enter Employee ID to Delete: ";
-                cin>>id;
-                payroll.deleteEmployee(id);
-                break;
-            }
-            case 5:
-                loggedIn=false;
-                break;
-            default:
-                cout<<"Invalid choice! Try again.\n";
+        switch (option) {
+        case 1: {
+            int id;
+            string name;
+            double hourlyRate, hoursWorked;
+            cout << "Enter ID: ";
+            cin >> id;
+            cin.ignore();
+            cout << "Enter Name: ";
+            getline(cin, name);
+            cout << "Enter Hourly Rate: ";
+            cin >> hourlyRate;
+            cout << "Enter Hours Worked: ";
+            cin >> hoursWorked;
+            payroll.addEmployee(id, name, hourlyRate, hoursWorked);
+            break;
+        }
+        case 2:
+            payroll.displayPayroll();
+            break;
+        case 3:
+            payroll.updateEmployee();
+            break;
+        case 4: {
+            int id;
+            cout << "Enter Employee ID to Delete: ";
+            cin >> id;
+            payroll.deleteEmployee(id);
+            break;
+        }
+        case 5:
+            loggedIn = false;
+            break;
+        default:
+            cout << "Invalid choice! Try again.\n";
         }
         system("pause");
-    }
-    while (option != 5);
+    } while (option != 5);
 
+    return 0;
 }
-
-
