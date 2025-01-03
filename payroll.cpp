@@ -310,64 +310,138 @@ private:
     }
 
 public:
+     ~PayrollSystem() {
+
+        for (auto& emp : employees) {
+            delete emp;
+        }
+        employees.clear();
+    }
+
     PayrollSystem() {
         loadFromFile();
     }
 
-    void addEmployee(int id, string name, double hourlyRate, double hoursWorked)
-    {
-        if (findEmployeeIndex(id)!=-1) {
-            cout <<"Employee with ID "<<id<<" already exists.\n";
-            return;
+    void addEmployee(int id, string name, double hourlyRate, double hoursWorked) {
+        Employee* newEmployee = nullptr;
+        string type, level;
+        cout << "Enter Employee Type (full-time, part-time, intern): ";
+        cin >> type;
+        cout << "Enter Experience Level (entry, senior): ";
+        cin >> level;
+
+        if (type == "full-time")
+        {
+            if (level=="entry")
+            {
+                newEmployee = new FullTimeEmployee(id,name,hourlyRate,hoursWorked,"Entry-Level");
+            }
+            else if (level=="senior")
+            {
+                newEmployee=new FullTimeEmployee(id,name,hourlyRate,hoursWorked,"Senior-Level");
+            }
+            else
+            {
+                newEmployee=new FullTimeEmployee(id,name,hourlyRate,hoursWorked,level);
+            }
         }
-        employees.emplace_back(id,name,hourlyRate,hoursWorked);
-        saveToFile();
-        cout <<"Employee added successfully!\n";
+        else if (type=="part-time")
+        {
+            newEmployee=new FullTimeEmployee(id, name, hourlyRate, hoursWorked,"Part-Time");
+        }
+        else if (type=="intern")
+        {
+            newEmployee=new FullTimeEmployee(id, name, hourlyRate, hoursWorked,"Intern");
+        }
+
+        if (newEmployee)
+        {
+            employees.push_back(newEmployee);
+            saveToFile();
+            cout<<"Employee added successfully!\n";
+        }
+        else
+        {
+            cout<<"Invalid employee type or level!\n";
+        }
     }
 
-    void displayPayroll()
-    {
-        if (employees.empty())
+    void displayPayroll() {
+        cout<<left<<setw(10)<<"ID"<<setw(20)<<"Name"<<setw(15)<<"Hourly Rate"
+             << setw(15)<<"Hours Worked"<<setw(15)<<"Salary"<<setw(15)<<"Type"<<setw(15)<<"Level"<< endl;
+        for (const auto& emp : employees)
         {
-            cout<<"No employees found.\n";
-            return;
-        }
-        cout <<left<<setw(10)<<"ID"<<setw(20)<<"Name"
-             <<setw(15)<<"Hourly Rate"<<setw(15)<<"Hours Worked"
-             <<setw(15)<<"Salary"<<endl;
-        cout<<string(75,'-')<<endl;
-
-        for (const auto &emp:employees)
-        {
-            emp.displayDetails();
+            emp->displayDetails();
         }
     }
 
-    void updateEmployee(int id, string newName, double newRate, double newHours)
-    {
-        int index = findEmployeeIndex(id);
-        if (index == -1)
-        {
-            cout << "Employee with ID " << id << " not found.\n";
-            return;
-        }
-        employees[index].setName(newName);
-        employees[index].setHourlyRate(newRate);
-        employees[index].setHoursWorked(newHours);
-        saveToFile();
-        cout<<"Employee updated successfully!\n";
-    }
+ void updateEmployee() {
+    int id;
+    cout<<"Enter Employee ID to Update: ";
+    cin>>id;
 
-    void deleteEmployee(int id)
-    {
-        int index = findEmployeeIndex(id);
-        if (index==-1) {
-            cout<<"Employee with ID "<<id<< " not found.\n";
+    for (auto& emp:employees) {
+        if (emp->getId()==id)
+        {
+            double rate,hours;
+            string type,level;
+
+            cout<<"Enter New Hourly Rate: ";
+            cin>>rate;
+            emp->setHourlyRate(rate);
+
+            cout<<"Enter New Hours Worked: ";
+            cin>>hours;
+            emp->setHoursWorked(hours);
+
+            cout<<"Enter New Employee Type (full-time, part-time, intern): ";
+            cin>>type;
+            emp->setType(type);
+
+            cout<<"Enter New Experience Level (entry, senior): ";
+            cin>>level;
+            emp->setLevel(level);
+
+            if(type=="full-time")
+            {
+                if (level=="entry") {
+                    *emp=FullTimeEmployee(id, emp->getName(),rate,hours,"Entry-Level");
+                }
+                else if (level=="senior") {
+                    *emp=FullTimeEmployee(id, emp->getName(),rate,hours,"Senior-Level");
+                }
+                else {
+                    *emp=FullTimeEmployee(id,emp->getName(),rate,hours,level);
+                }
+            }
+            else if(type=="part-time")
+            {
+                *emp =PartTimeEmployee(id,emp->getName(),rate,hours,"Part-Time");
+            }
+            else if(type=="intern")
+            {
+                *emp =InternEmployee(id,emp->getName(),rate,hours,"Intern");
+            }
+
+            saveToFile();
+            cout << "Employee updated successfully!\n";
             return;
         }
-        employees.erase(employees.begin()+index);
-        saveToFile();
-        cout<<"Employee deleted successfully!\n";
+    }
+    cout << "Employee not found!\n";
+}
+    void deleteEmployee(int id) {
+        for (auto it = employees.begin(); it != employees.end(); ++it) {
+            if ((*it)->getId()==id)
+            {
+                delete *it;
+                employees.erase(it);
+                saveToFile();
+                cout << "Employee deleted successfully!\n";
+                return;
+            }
+        }
+        cout << "Employee not found!\n";
     }
 };
 
